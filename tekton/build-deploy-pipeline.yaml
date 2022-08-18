@@ -1,0 +1,73 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: clone-build-deploy
+spec:
+  workspaces:
+  - name: shared-workspace
+  - name: maven-settings
+  - name: shared-image-repo
+  params:
+  - name: deployment-name
+    type: string
+    description: name of the deployment to be patched
+    default: springboot-tekton
+  - name: git-url
+    type: string
+    default: 'https://github.com/sholly/springboot-tekton-demo.git'
+    description: url of the git repo for the code of deployment
+  - name: git-revision
+    type: string
+    description: revision to be used from repo of the code for deployment
+    default: main
+  - name: image
+    type: string
+    description: image to be build from the code
+    default: latest
+  tasks:
+  - name: fetch-repository
+    taskRef:
+      name: git-clone
+      kind: ClusterTask
+    workspaces:
+    - name: output
+      workspace: shared-workspace
+    params:
+    - name: url
+      value: $(params.git-url)
+    - name: subdirectory
+      value: ""
+    - name: deleteExisting
+      value: "true"
+    - name: revision
+      value: $(params.git-revision)
+  - name: build-artifact-mvn
+    taskRef:
+      name: maven
+      kind: ClusterTask
+    params: 
+      - name: GOALS
+        value: 
+          - 'clean'
+          - 'package'
+    runAfter:
+      - fetch-repository
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    - name: maven-settings
+      workspace: maven-settings
+  - name: build-image
+    params:
+      - name: IMAGE
+        value: $(params.deployment-name):$(params.image)
+      - name: TLSVERIFY
+        value: 'false'
+    runAfter:
+      - build-artifact-mvn
+    taskRef:
+      kind: ClusterTask
+      name: buildah
+    workspaces:
+      - name: source
+        workspace: shared-workspace
