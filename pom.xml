@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.unixnerd</groupId>
-    <artifactId>springboot-tekton-demo</artifactId>
+    <artifactId>springboot-tekton</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springboot-tekton-demo</name>
+    <name>springboot-tekton</name>
     <description>springboot-tekton-demo</description>
     <properties>
         <java.version>11</java.version>
@@ -36,6 +36,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>${project.artifactId}</finalName>
     </build>
 
 </project>
