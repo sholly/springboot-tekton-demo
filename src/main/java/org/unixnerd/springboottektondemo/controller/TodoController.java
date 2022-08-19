@@ -23,4 +23,9 @@ public class TodoController {
     public List<Todo> getTodos2() {
         return todoRepository.getAll2();
     }
+
+    @GetMapping("todos3")
+    public String getTodos3() {
+        return "no";
+    }
 }
