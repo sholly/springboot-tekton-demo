@@ -3,4 +3,4 @@ FROM openjdk:11
 
 COPY target/springboot-tekton.jar /deployments
 
-ENTRYPOINT ["java","-jar", "/deployments/openshift-tekton.jar"]
+ENTRYPOINT ["java","-jar", "/deployments/springboot-tekton.jar"]
