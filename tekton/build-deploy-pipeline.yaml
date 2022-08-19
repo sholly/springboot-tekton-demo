@@ -75,7 +75,7 @@ spec:
     params:
       - name: SCRIPT
         value: |
-          ls
+          oc apply -f openshift/
     runAfter:
       - build-image
     taskRef:
