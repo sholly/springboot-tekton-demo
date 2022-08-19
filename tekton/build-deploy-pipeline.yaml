@@ -131,28 +131,28 @@ spec:
       - name: manifest-dir
         workspace: shared-workspace
 
-#  - name: patch-deployment
-#    params:
-#      - name: SCRIPT
-#        value: |
-#          echo $(params.deployment-name);
-#          echo $(params.image);
-#          export DEPLOYMENT=$(params.deployment-name)
-#          export IMAGETAG="$(params.image):$(tasks.cut-commit-hash.results.commit_short)";
-#          echo $DEPLOYMENT;
-#          echo "||$IMAGETAG||";
-#          oc patch deployment $DEPLOYMENT --patch='{"spec":{"template":{"spec":{
-#            "containers":[{
-#              "name": "$(params.deployment-name)",
-#              "image":"$(params.image):$(tasks.cut-commit-hash.results.commit_short)"
-#            }]
-#          }}}}';
-#    runAfter:
-#      - tag-latest-to-hash
-#    taskRef:
-#      kind: ClusterTask
-#      name: openshift-client
-#    workspaces:
-#      - name: manifest-dir
-#        workspace: shared-workspace
-#test
+  - name: patch-deployment
+    params:
+      - name: SCRIPT
+        value: |
+          echo $(params.deployment-name);
+          echo $(params.image);
+          export DEPLOYMENT=$(params.deployment-name)
+          export IMAGETAG="$(params.image):$(tasks.cut-commit-hash.results.commit_short)";
+          echo $DEPLOYMENT;
+          echo "||$IMAGETAG||";
+          oc patch deployment $DEPLOYMENT --patch='{"spec":{"template":{"spec":{
+            "containers":[{
+              "name": "$(params.deployment-name)",
+              "image":"$(params.image):$(tasks.cut-commit-hash.results.commit_short)"
+            }]
+          }}}}';
+    runAfter:
+      - tag-latest-to-hash
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+    workspaces:
+      - name: manifest-dir
+        workspace: shared-workspace
+
