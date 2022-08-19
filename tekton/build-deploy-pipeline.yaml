@@ -55,7 +55,7 @@ spec:
     workspaces:
       - name: manifest-dir
         workspace: shared-workspace
-  - name: cut-commit-hash
+  - name: build-artifact-mvn
     taskRef:
       name: maven
       kind: ClusterTask
