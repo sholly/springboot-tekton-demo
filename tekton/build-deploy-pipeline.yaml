@@ -40,7 +40,22 @@ spec:
       value: "true"
     - name: revision
       value: $(params.git-revision)
-  - name: build-artifact-mvn
+
+  - name: cut-commit-hash
+    params:
+      - name: SCRIPT
+        value: |
+          echo $(tasks.fetch-repository.results.commit)
+          echo $(tasks.fetch-repository.results.commit) |cut -c 1-10 
+    runAfter:
+      - fetch-repository
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+    workspaces:
+      - name: manifest-dir
+        workspace: shared-workspace
+  - name: cut-commit-hash
     taskRef:
       name: maven
       kind: ClusterTask
