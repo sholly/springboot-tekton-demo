@@ -10,4 +10,4 @@ ADD /workspace/source/target/openshift-tekton.jar /deployments/openshift-tekton.
 WORKDIR /deployments
 USER 1001
 EXPOSE 8080
-ENTRYPOINT ["java","-jar", "/deployments/openshift-tekton.jar"]
+ENTRYPOINT ["java","-jar", "/deployments/springboot-tekton.jar"]
