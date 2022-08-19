@@ -1,4 +1,26 @@
 apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: cut-commit-hash
+spec:
+  params:
+    - name: commit
+      description: the first operand
+  results:
+    - name: commit_short
+      description: the sum of the first and second operand
+  steps:
+    - name: cut
+      image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+      env:
+        - name: COMMIT
+          value: $(params.commit)
+      command: ["/bin/sh", "-c"]
+      args:
+        - COMMIT_SHORT=$(echo -n ${COMMIT} |cut -c 1-10); echo -n $COMMIT_SHORT | tee $(results.commit_short.path);
+---
+
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: clone-build-deploy
@@ -22,7 +44,7 @@ spec:
   - name: image
     type: string
     description: image to be build from the code
-    default: 'image-registry.openshift-image-registry.svc:5000/springboot-tekton/springboot-tekton:latest'
+    default: 'image-registry.openshift-image-registry.svc:5000/springboot-tekton/springboot-tekton'
   tasks:
   - name: fetch-repository
     taskRef:
@@ -43,18 +65,13 @@ spec:
 
   - name: cut-commit-hash
     params:
-      - name: SCRIPT
-        value: |
-          echo $(tasks.fetch-repository.results.commit)
-          echo $(tasks.fetch-repository.results.commit) |cut -c 1-10 
+      - name: commit
+        value: $(tasks.fetch-repository.results.commit)
     runAfter:
       - fetch-repository
     taskRef:
-      kind: ClusterTask
-      name: openshift-client
-    workspaces:
-      - name: manifest-dir
-        workspace: shared-workspace
+      name: cut-commit-hash
+
   - name: build-artifact-mvn
     taskRef:
       name: maven
@@ -65,16 +82,16 @@ spec:
           - 'clean'
           - 'package'
     runAfter:
-      - fetch-repository
+      - cut-commit-hash
     workspaces:
     - name: source
       workspace: shared-workspace
     - name: maven-settings
       workspace: maven-settings
-  - name: build-image
+  - name: build-image-latest
     params:
       - name: IMAGE
-        value: $(params.image)
+        value: $(params.image):latest
       - name: TLSVERIFY
         value: 'false'
     runAfter:
@@ -92,7 +109,46 @@ spec:
         value: |
           oc apply -f openshift/
     runAfter:
-      - build-image
+      - build-image-latest
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+    workspaces:
+      - name: manifest-dir
+        workspace: shared-workspace
+
+  - name: tag-latest-to-hash
+    params:
+      - name: SCRIPT
+        value: |
+          oc tag $(params.deployment-name):latest $(params.deployment-name):$(tasks.cut-commit-hash.results.commit_short)
+    runAfter:
+      - apply-deployment
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+    workspaces:
+      - name: manifest-dir
+        workspace: shared-workspace
+
+  - name: patch-deployment
+    params:
+      - name: SCRIPT
+        value: |
+          echo $(params.deployment-name);
+          echo $(params.image);
+          export DEPLOYMENT=$(params.deployment-name)
+          export IMAGETAG="$(params.image):$(tasks.cut-commit-hash.results.commit_short)";
+          echo $DEPLOYMENT;
+          echo "||$IMAGETAG||";
+          oc patch deployment $DEPLOYMENT --patch='{"spec":{"template":{"spec":{
+            "containers":[{
+              "name": "$(params.deployment-name)",
+              "image":"$(params.image):$(tasks.cut-commit-hash.results.commit_short)"
+            }]
+          }}}}';
+    runAfter:
+      - tag-latest-to-hash
     taskRef:
       kind: ClusterTask
       name: openshift-client
