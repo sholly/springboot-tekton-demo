@@ -1,6 +1,6 @@
 FROM openjdk:8
 RUN pwd && \
-    ls /workspace && \
+    find / -iname "*.jar" -ls && \
     mkdir -p /deployments/config &&  \
     chown -R 1001:0 /deployments/ && \
     chmod -R 775 /deployments/ && \
