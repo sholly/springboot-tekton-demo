@@ -16,4 +16,10 @@ public class TodoRepository {
         todos.add(new Todo("three", "this is three", false));
         return todos;
     }
+
+    public List<Todo> getAll2() {
+        List<Todo> todos = new ArrayList<>();
+        todos.add(new Todo("four", "four", false));
+        return todos;
+    }
 }

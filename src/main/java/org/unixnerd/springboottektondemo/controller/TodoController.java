@@ -18,4 +18,9 @@ public class TodoController {
     public List<Todo> getTodos(){
         return todoRepository.getAll();
     }
+    
+    @GetMapping("/todos2")
+    public List<Todo> getTodos2() {
+        return todoRepository.getAll2();
+    }
 }

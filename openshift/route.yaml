@@ -1,0 +1,20 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+  labels:
+    app: springboot-tekton
+    app.kubernetes.io/component: springboot-tekton
+    app.kubernetes.io/instance: springboot-tekton
+    app.kubernetes.io/name: springboot-tekton
+  name: springboot-tekton
+  namespace: springboot-tekton
+spec:
+  host: springboot-tekton-springboot-tekton.apps.ocp4.lab.unixnerd.org
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: springboot-tekton
+    weight: 100
+  wildcardPolicy: None
