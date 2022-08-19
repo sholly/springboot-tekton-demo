@@ -6,7 +6,6 @@ spec:
   workspaces:
   - name: shared-workspace
   - name: maven-settings
-  - name: shared-image-repo
   params:
   - name: deployment-name
     type: string
@@ -60,7 +59,7 @@ spec:
   - name: build-image
     params:
       - name: IMAGE
-        value: $(params.deployment-name):$(params.image)
+        value: $(params.image)
       - name: TLSVERIFY
         value: 'false'
     runAfter:
