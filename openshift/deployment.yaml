@@ -12,7 +12,7 @@ metadata:
   namespace: springboot-tekton
 spec:
   progressDeadlineSeconds: 600
-  replicas: 1
+  replicas: 4
   revisionHistoryLimit: 10
   selector:
     matchLabels:
