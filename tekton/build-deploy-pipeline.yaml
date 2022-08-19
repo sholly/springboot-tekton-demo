@@ -70,3 +70,18 @@ spec:
     workspaces:
       - name: source
         workspace: shared-workspace
+
+  - name: apply-deployment
+      params:
+        - name: SCRIPT
+          value: |
+            pwd
+            ls
+      runAfter:
+        - buildimage
+      taskRef:
+        kind: ClusterTask
+        name: openshift-client
+      workspaces:
+        - name: manifest-dir
+          workspace: shared-workspace
