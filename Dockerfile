@@ -1,5 +1,7 @@
 FROM openjdk:8
-RUN mkdir -p /deployments/config &&  \
+RUN pwd && \
+    ls && \
+    mkdir -p /deployments/config &&  \
     chown -R 1001:0 /deployments/ && \
     chmod -R 775 /deployments/ && \
     pwd && \
