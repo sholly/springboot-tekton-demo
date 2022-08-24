@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.unixnerd.springboottektondemo.model.Todo;
 import org.unixnerd.springboottektondemo.repository.TodoRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,5 +28,12 @@ public class TodoController {
     @GetMapping("todos3")
     public String getTodos3() {
         return "no";
+    }
+
+    @GetMapping("/todos4")
+    public List<Todo> getTodos4() {
+        List<Todo> results = new ArrayList<>();
+        results.add(new Todo("foo", "bar", false));
+        return results;
     }
 }
