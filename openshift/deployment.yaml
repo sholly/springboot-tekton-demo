@@ -12,14 +12,14 @@ metadata:
   namespace: springboot-tekton
 spec:
   affinity: 
-  podAffinity: 
-    preferredDuringSchedulingIgnoreDuringExecution:
-    - labelSelector: 
-        matchExpressions: 
-        - key: app
-          operator: In
-          values: 
-          - springboot-tekton
+    podAffinity: 
+      preferredDuringSchedulingIgnoreDuringExecution:
+      - labelSelector: 
+          matchExpressions: 
+          - key: app
+            operator: In
+            values: 
+            - springboot-tekton
   progressDeadlineSeconds: 600
   replicas: 4
   revisionHistoryLimit: 10
