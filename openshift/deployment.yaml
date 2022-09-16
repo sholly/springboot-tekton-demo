@@ -11,6 +11,15 @@ metadata:
   name: springboot-tekton
   namespace: springboot-tekton
 spec:
+  affinity: 
+  podAffinity: 
+    requiredDuringSchedulingIgnoreDuringExecution:
+    - labelSelector: 
+        matchExpressions: 
+        - key: app
+          operator: In
+          values: 
+          - springboot-tekton
   progressDeadlineSeconds: 600
   replicas: 4
   revisionHistoryLimit: 10
