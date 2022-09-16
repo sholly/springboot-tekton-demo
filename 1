@@ -12,7 +12,7 @@ metadata:
   namespace: springboot-tekton
 spec:
   affinity: 
-    podAffinity: 
+    podAntiAffinity: 
       preferredDuringSchedulingIgnoreDuringExecution:
       - labelSelector: 
           matchExpressions: 
@@ -21,7 +21,7 @@ spec:
             values: 
             - springboot-tekton
   progressDeadlineSeconds: 600
-  replicas: 8
+  replicas: 4
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -39,15 +39,6 @@ spec:
       labels:
         deployment: springboot-tekton
     spec:
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoreDuringExecution:
-          - labelSelector:
-              matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - springboot-tekton
       containers:
         - name: springboot-tekton
           image: >-
