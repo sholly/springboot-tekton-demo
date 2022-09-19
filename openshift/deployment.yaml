@@ -21,7 +21,7 @@ spec:
             values: 
             - springboot-tekton
   progressDeadlineSeconds: 600
-  replicas: 8
+  replicas: 4
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -41,13 +41,16 @@ spec:
     spec:
       affinity:
         podAntiAffinity:
-          preferredDuringSchedulingIgnoreDuringExecution:
-          - labelSelector:
-              matchExpressions:
-                - key: app
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: name
                   operator: In
                   values:
                   - springboot-tekton
+              topologyKey: node-role.kubernetes.io/worker
       containers:
         - name: springboot-tekton
           image: >-
