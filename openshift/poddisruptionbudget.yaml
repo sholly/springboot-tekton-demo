@@ -3,7 +3,7 @@ kind: PodDisruptionBudget
 metadata:
   name: springboot-tekton-budget
 spec:
-  minAvailable: 7  
+  minAvailable: 4  
   selector:  
     matchLabels:
       app: springboot-tekton
