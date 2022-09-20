@@ -21,7 +21,7 @@ spec:
             values: 
             - springboot-tekton
   progressDeadlineSeconds: 600
-  replicas: 5
+  replicas: 3
   revisionHistoryLimit: 10
   selector:
     matchLabels:
