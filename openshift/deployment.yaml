@@ -9,7 +9,6 @@ metadata:
     app.kubernetes.io/instance: springboot-tekton
     app.kubernetes.io/name: springboot-tekton
   name: springboot-tekton
-  namespace: springboot-tekton
 spec:
   affinity: 
     podAffinity: 
@@ -54,7 +53,7 @@ spec:
       containers:
         - name: springboot-tekton
           image: >-
-            image-registry.openshift-image-registry.svc:5000/springboot-tekton/springboot-tekton:latest
+            image-registry.openshift-image-registry.svc:5000/springboot-tekton-demo/springboot-tekton:latest
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 8080

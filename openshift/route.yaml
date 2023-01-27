@@ -8,7 +8,6 @@ metadata:
     app.kubernetes.io/instance: springboot-tekton
     app.kubernetes.io/name: springboot-tekton
   name: springboot-tekton
-  namespace: springboot-tekton
 spec:
   host: springboot-tekton-springboot-tekton.apps.ocp4.lab.unixnerd.org
   port:
