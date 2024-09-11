@@ -44,7 +44,7 @@ spec:
   - name: image
     type: string
     description: image to be build from the code
-    default: 'image-registry.openshift-image-registry.svc:5000/springboot-tekton-demo/springboot-tekton'
+    default: 'image-registry.openshift-image-registry.svc:5000/springboot-tekton-argocd/springboot-tekton'
   tasks:
   - name: fetch-repository
     taskRef:
@@ -130,29 +130,3 @@ spec:
     workspaces:
       - name: manifest-dir
         workspace: shared-workspace
-
-  - name: patch-deployment
-    params:
-      - name: SCRIPT
-        value: |
-          echo $(params.deployment-name);
-          echo $(params.image);
-          export DEPLOYMENT=$(params.deployment-name)
-          export IMAGETAG="$(params.image):$(tasks.cut-commit-hash.results.commit_short)";
-          echo $DEPLOYMENT;
-          echo "||$IMAGETAG||";
-          oc patch deployment $DEPLOYMENT --patch='{"spec":{"template":{"spec":{
-            "containers":[{
-              "name": "$(params.deployment-name)",
-              "image":"$(params.image):$(tasks.cut-commit-hash.results.commit_short)"
-            }]
-          }}}}';
-    runAfter:
-      - tag-latest-to-hash
-    taskRef:
-      kind: ClusterTask
-      name: openshift-client
-    workspaces:
-      - name: manifest-dir
-        workspace: shared-workspace
-
